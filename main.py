@@ -1,18 +1,41 @@
 
 from src.textToLed import TextToLed
+from src.gui import Gui
 from test.ledTest import LedTest
+
+import threading
+
 TEST_MODE = True
 
-def main():
-	t2l = TextToLed()
-
-	if TEST_MODE:
-		text = "Hola"
-		characters = t2l.parse_text(text) 
+class Manager():
+	def convert_text(self, text):
+		characters = self.t2l.parse_text(text) 
 		print (characters)
-	else:
-		pass
-		#led programming
+
+		if TEST_MODE:
+			# Temp: Test connection with test by switching one led on
+			self.led_test.switch_led(0, 0, True)
+
+	def run_gui(self, button_callback):
+		self.gui = Gui(button_callback)
+		self.gui.run()
+
+	def run_test(self):
+		self.led_test = LedTest()
+		self.led_test.run()
+
+	def main(self):
+		self.t2l = TextToLed()
+		guiThread = threading.Thread(target = self.run_gui, args=(self.convert_text,))
+		guiThread.start()
+
+		if TEST_MODE:
+			testThread = threading.Thread(target = self.run_test)
+			testThread.start()
+		else:
+			pass
+			#led programming
 
 if __name__ == '__main__':
-	main()
+	manager = Manager()
+	manager.main()
