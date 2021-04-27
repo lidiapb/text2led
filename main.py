@@ -5,7 +5,7 @@ from test.ledTest import LedTest
 
 import threading
 
-TEST_MODE = True
+TEST_MODE = False
 
 class Manager():
 	def convert_text(self, text):
