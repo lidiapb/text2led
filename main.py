@@ -1,11 +1,11 @@
 
-from src.textToLed import TextToLed
+from src.text2Led import Text2Led
 from src.gui import Gui
 from test.ledTest import LedTest
 
 import threading
 
-TEST_MODE = False
+TEST_MODE = True
 
 class Manager():
 	def convert_text(self, text):
@@ -25,7 +25,7 @@ class Manager():
 		self.led_test.run()
 
 	def main(self):
-		self.t2l = TextToLed()
+		self.t2l = Text2Led()
 		guiThread = threading.Thread(target = self.run_gui, args=(self.convert_text,))
 		guiThread.start()
 
