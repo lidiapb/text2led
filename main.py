@@ -1,20 +1,26 @@
 
+WINDOWS = True
+
 from src.text2Led import Text2Led
-from src.gui import Gui
-from test.ledTest import LedTest
+from src.led_manager import LedManager
+
+if WINDOWS:
+	from src.gui import Gui
+	from test.ledTest import LedTest
 
 import threading
-
-TEST_MODE = True
 
 class Manager():
 	def convert_text(self, text):
 		characters = self.t2l.parse_text(text) 
 		print (characters)
 
-		if TEST_MODE:
-			# Temp: Test connection with test by switching one led on
+		if WINDOWS:
+			# Temp: Test connection with ledtest GUI by switching one led on
 			self.led_test.switch_led(0, 0, True)
+		
+		# Pending call to the ledmanager
+		
 
 	def run_gui(self, button_callback):
 		self.gui = Gui(button_callback)
@@ -26,15 +32,17 @@ class Manager():
 
 	def main(self):
 		self.t2l = Text2Led()
-		guiThread = threading.Thread(target = self.run_gui, args=(self.convert_text,))
-		guiThread.start()
+		self.led_manager = LedManager()
+		
+		if WINDOWS:
+			guiThread = threading.Thread(target = self.run_gui, args=(self.convert_text,))
+			guiThread.start()
 
-		if TEST_MODE:
 			testThread = threading.Thread(target = self.run_test)
 			testThread.start()
 		else:
-			pass
-			#led programming
+			text = input("Introduce the text: ")
+			self.convert_text(text)
 
 if __name__ == '__main__':
 	manager = Manager()
