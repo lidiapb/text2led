@@ -1,5 +1,5 @@
 
-WINDOWS = False
+WINDOWS = True
 
 from src.text2Led import Text2Led
 
@@ -42,7 +42,6 @@ class Manager():
 
 	def main(self):
 		self.t2l = Text2Led()
-		self.led_manager = LedManager()
 		
 		if WINDOWS:
 			guiThread = threading.Thread(target = self.run_gui, args=(self.print_text,))
@@ -51,6 +50,7 @@ class Manager():
 			testThread = threading.Thread(target = self.run_test)
 			testThread.start()
 		else:
+			self.led_manager = LedManager()
 			text = input("Introduce the text: ")
 			self.print_text(text)
 

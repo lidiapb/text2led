@@ -23,8 +23,8 @@ class LedTest:
 	def draw_array(self, led_array):
 		for led in led_array:
 			row = ord(led[0])-65
-			col = int(led[1])
-			switch_led(row, column, True)
+			col = int(led[1])-1
+			self.switch_led(row, col, True)
 
 	def run(self):
 		self.window = Tk()
