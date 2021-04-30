@@ -12,7 +12,7 @@ class LedManager:
     DEFAULT_BRIGHTNESS = 100
     DEFAULT_COLOR = COLORS.blue
 
-    with open(os.path.join(sys.path[0], 'src','led_mapping.json')) as json_file:
+    with open('/home/pi/text2led/src/led_mapping.json') as json_file:
         MAPPING = json.load(json_file)
            
     def __init__(self, rows=ROWS, cols=COLS, brightness=DEFAULT_BRIGHTNESS):
@@ -34,5 +34,14 @@ class LedManager:
 
     def send_to_leds(self):
         self.layout.push_to_driver()
+
+    def draw_array(self, led_array):
+        #Turn off all leds
+        self.clear()
+
+        for led in led_array:
+            self.set_led(led)
+
+        self.send_to_leds()
 
 

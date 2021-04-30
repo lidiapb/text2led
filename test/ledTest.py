@@ -2,8 +2,10 @@ from tkinter import *
 
 class LedTest:
 	leds = []
-	rows = 8
-	columns = 18
+
+	def __init__(self, rows, columns):
+		self.rows = rows
+		self.columns = columns
 
 	def switch_led(self, row, column, state):
 		led=self.leds[row][column]
@@ -11,6 +13,18 @@ class LedTest:
 			led.configure(bg="red")
 		else:
 			led.configure(bg="white")
+
+	def clear(self):
+		for row in range(self.rows):
+			for col in range(self.columns):
+				led = self.leds[row][column]
+				led.configure(bg="white")
+
+	def draw_array(self, led_array):
+		for led in led_array:
+			row = ord(led[0])-65
+			col = int(led[1])
+			switch_led(row, column, True)
 
 	def run(self):
 		self.window = Tk()
