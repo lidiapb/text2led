@@ -1,7 +1,16 @@
 import json
+import copy
 class Text2Led:
-    with open('C:\\Users\\lidia\\Documents\\programming\\text2Led\\src\\characters_matrix.json') as json_file:
-        char2Matrix_dict = json.load(json_file)
+    # TODO: Get path automatically
+    with open('C:\\Users\\Lidia\\Documents\\Personal\\text2led\\src\\characters_matrix.json') as json_file:
+        char2Matrix_dict = json.load(json_file)   
+
+    # Number of led columns to separate one character from the other
+    chars_separation = 2 
+
+    def __init__(self, rows, columns):
+        self.rows = rows
+        self.columns = columns
     
     def parse_text(self, text):
         # This methid takes a string and converts it to a char list all in uppercase
@@ -9,9 +18,27 @@ class Text2Led:
         char_list=[c for c in text]
         return char_list
 
-    def character_to_matrix(self, character):
-        matrix = self.char2Matrix_dict[character]
+    def charlist_to_matrix(self, characters):
+        
+        matrix = []
+        zeros = [0 for sep in range(self.chars_separation)]
+        for character in characters:            
+            char_matrix = self.character_to_matrix(character)
+
+            if matrix == []:
+                matrix = char_matrix
+            else:
+                # Append each row to the full matrix
+                for row_index in range(len(char_matrix)):
+                    matrix[row_index] = matrix[row_index] + zeros + char_matrix[row_index]
+
         return matrix
+
+
+    def character_to_matrix(self, character):
+        # TODO: Check if key exists in dictionary. Return empty matrix otherwise
+        dict_ref = copy.deepcopy(self.char2Matrix_dict)
+        return dict_ref[character]
 
     def matrix_conversion(self, input_matrix):
         # This method converts from a matrix of 1s and 0s to a list of coordinates A1, A2, etc. 
@@ -32,13 +59,39 @@ class Text2Led:
 
         for row_index in range(len(input_matrix)):
             row = input_matrix[row_index]
-            #print(row)
+
             for column_index in range(len(row)):
                 column = row[column_index]
-                #print(column)
 
                 if column == 1:
                     coodinates = chr(row_index+65)+ str (column_index+1)
                     result.append(coodinates)
-        #print(result)
+
         return result
+
+    def get_cut_matrix(self, input_matrix, start_col):
+        # Return the part of the matrix starting from the column start_col and with maximum columns defined by self.columns. 
+        # If there is space remaining, repeat the start of the matrix
+
+        cut_matrix = []
+          
+        for row_index in range(len(input_matrix)):                 
+            
+            # Initially cut row starting from the current start_col which changes with movement
+            if start_col < len(input_matrix[0]):
+                row = input_matrix[row_index][:start_col+1]
+            else:
+                row = input_matrix[row_index] + [0 for ind in range(start_col - len(input_matrix[0]))]
+
+            if len(row) > self.columns:
+                # If size exceeds available space, cut input row
+                row = row[len(row) - self.columns:]
+            else:
+                # Fill with zeros to the left to complete matrix size                
+                row = [0 for ind in range(self.columns - len(row))] + row
+                
+            cut_matrix.append(row)
+        return cut_matrix
+
+
+

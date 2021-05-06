@@ -1,15 +1,20 @@
 from tkinter import *
+import threading
 
-class Gui:
+class Gui(threading.Thread):
 	window = object()
 	txt = object()		
 
 	def __init__(self, callback):
+		threading.Thread.__init__(self)
 		self.callback = callback
 
 	def clicked(self):
 		input_text = self.txt.get()
 		self.callback(input_text)
+
+	def close(self):
+		self.window.destroy()
 
 	def run(self):
 		self.window = Tk()

@@ -1,55 +1,73 @@
 
-WINDOWS = True
-
 from src.text2Led import Text2Led
 import time
+import sys
+
+# TODO: Get OS automatically
+WINDOWS = True
 
 if WINDOWS:
 	from src.gui import Gui
 	from test.ledTest import LedTest
 	import threading
 else:
-	from src.led_manager import LedManager
+	from src.led_manager import LedManager 	
 
 rows = 8
 columns = 18
+period = 0.1 # Time between movements of the characters
 
 class Manager():
+	last_iteration_time = 0
+
 	def print_text(self, text):
+		print_thread = threading.Thread(target=self.print_text_threaded, args=(text,))
+		print_thread.start()
+
+	def print_text_threaded(self, text):
 		# Print the input text in the leds and optionally in the test GUI if working on WINDOWS
-
 		characters = self.t2l.parse_text(text) 
-		print (characters)
-		for character in characters:
-			led_matrix = self.t2l.character_to_matrix(character)
-			led_array = self.t2l.matrix_conversion(led_matrix)
+		#print (characters)
 
-			if WINDOWS:
-				self.led_test.draw_array(led_array)
+		led_matrix = self.t2l.charlist_to_matrix(characters)			
+
+		index = 0
+
+		while(True):
+			time_now = time.time()
+			if time_now - self.last_iteration_time < period:
+				continue
+			else:
+				self.last_iteration_time = time_now
 			
+			cut_matrix = self.t2l.get_cut_matrix(led_matrix, index)
+			led_array = self.t2l.matrix_conversion(cut_matrix)
+			if WINDOWS:
+				self.led_test.draw_array(led_array)				
 			else:	
 				self.led_manager.draw_array(led_array)
-			time.sleep(2)
+
+			index+=1
+			if index >= len(led_matrix[0]) + columns:
+				index = 0
+							
 
 	def run_gui(self, button_callback):
 		self.gui = Gui(button_callback)
-		self.gui.run()
+		self.gui.start()
 
 	def run_test(self):
 		self.led_test = LedTest(rows, columns)
-		self.led_test.run()
+		self.led_test.start()	
 
 	def main(self):
-		self.t2l = Text2Led()
-		
-		if WINDOWS:
-			guiThread = threading.Thread(target = self.run_gui, args=(self.print_text,))
-			guiThread.start()
+		self.t2l = Text2Led(rows, columns)
 
-			testThread = threading.Thread(target = self.run_test)
-			testThread.start()
+		if WINDOWS:
+				self.run_gui(self.print_text)
+				self.run_test()
 		else:
-			self.led_manager = LedManager()
+			self.led_manager = LedManager(rows=rows, columns=columns)
 			text = input("Introduce the text: ")
 			self.print_text(text)
 

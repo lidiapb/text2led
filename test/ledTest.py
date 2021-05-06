@@ -1,9 +1,11 @@
 from tkinter import *
+import threading
 
-class LedTest:
+class LedTest(threading.Thread):
 	leds = []
 
 	def __init__(self, rows, columns):
+		threading.Thread.__init__(self)
 		self.rows = rows
 		self.columns = columns
 
@@ -24,8 +26,10 @@ class LedTest:
 		self.clear()
 		for led in led_array:
 			row = ord(led[0])-65
-			col = int(led[1])-1
-			self.switch_led(row, col, True)
+			col = int(led[1:])-1
+			# Avoid overflow
+			if(row < self.rows and col < self.columns):
+				self.switch_led(row, col, True)
 
 	def run(self):
 		self.window = Tk()
@@ -42,6 +46,9 @@ class LedTest:
 			self.leds.append(row)
 
 		self.window.mainloop()
+
+	def close(self):
+		self.window.destroy()
 
 if __name__ == '__main__':
 	test = LedTest()

@@ -12,6 +12,7 @@ class LedManager:
     DEFAULT_BRIGHTNESS = 100
     DEFAULT_COLOR = COLORS.blue
 
+    # TODO: Get path automatically
     with open('/home/pi/text2led/src/led_mapping.json') as json_file:
         MAPPING = json.load(json_file)
            
