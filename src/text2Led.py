@@ -1,6 +1,6 @@
 import json
 class Text2Led:
-    with open('/home/pi/text2led/src/characters_matrix.json') as json_file:
+    with open('C:\\Users\\lidia\\Documents\\programming\\text2Led\\src\\characters_matrix.json') as json_file:
         char2Matrix_dict = json.load(json_file)
     
     def parse_text(self, text):

@@ -17,10 +17,11 @@ class LedTest:
 	def clear(self):
 		for row in range(self.rows):
 			for col in range(self.columns):
-				led = self.leds[row][column]
+				led = self.leds[row][col]
 				led.configure(bg="white")
 
 	def draw_array(self, led_array):
+		self.clear()
 		for led in led_array:
 			row = ord(led[0])-65
 			col = int(led[1])-1
@@ -32,9 +33,9 @@ class LedTest:
 		self.window.geometry('400x200')
 
 		# Create leds elements
-		for c in range(self.columns):
+		for r in range(self.rows):
 			row = []
-			for r in range(self.rows):
+			for c in range(self.columns):
 				new_label = Label(self.window, text = " ", bg = "white")
 				new_label.grid(column=c, row=r+1, padx=1, pady=1)
 				row.append(new_label)
