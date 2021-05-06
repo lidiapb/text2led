@@ -2,6 +2,7 @@
 WINDOWS = False
 
 from src.text2Led import Text2Led
+import time
 
 if WINDOWS:
 	from src.gui import Gui
@@ -19,18 +20,16 @@ class Manager():
 
 		characters = self.t2l.parse_text(text) 
 		print (characters)
+		for character in characters:
+			led_matrix = self.t2l.character_to_matrix(character)
+			led_array = self.t2l.matrix_conversion(led_matrix)
 
-		# TODO: Create the real matrix of led position. This temporal matrix is for testing
-		led_matrix = [[0,1],[1,1]]
-
-		led_array = self.t2l.matrix_conversion(led_matrix)
-
-		if WINDOWS:
-			# Temp: Test connection with ledtest GUI by switching one led on
-			self.led_test.draw_array(led_array)
-		
-		else:	
-			self.led_manager.draw_array(led_array)
+			if WINDOWS:
+				self.led_test.draw_array(led_array)
+			
+			else:	
+				self.led_manager.draw_array(led_array)
+			time.sleep(2)
 
 	def run_gui(self, button_callback):
 		self.gui = Gui(button_callback)
