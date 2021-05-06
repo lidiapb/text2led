@@ -1,5 +1,4 @@
 import json
-import copy
 class Text2Led:
     # TODO: Get path automatically
     with open('C:\\Users\\Lidia\\Documents\\Personal\\text2led\\src\\characters_matrix.json') as json_file:
@@ -26,19 +25,18 @@ class Text2Led:
             char_matrix = self.character_to_matrix(character)
 
             if matrix == []:
-                matrix = char_matrix
-            else:
-                # Append each row to the full matrix
-                for row_index in range(len(char_matrix)):
-                    matrix[row_index] = matrix[row_index] + zeros + char_matrix[row_index]
+                matrix = [[] for idx in range(len(char_matrix))]
+
+            # Append each row to the full matrix
+            for row_index in range(len(char_matrix)):
+                matrix[row_index] = matrix[row_index] + zeros + char_matrix[row_index]
 
         return matrix
 
 
     def character_to_matrix(self, character):
         # TODO: Check if key exists in dictionary. Return empty matrix otherwise
-        dict_ref = copy.deepcopy(self.char2Matrix_dict)
-        return dict_ref[character]
+        return self.char2Matrix_dict[character]
 
     def matrix_conversion(self, input_matrix):
         # This method converts from a matrix of 1s and 0s to a list of coordinates A1, A2, etc. 
@@ -73,23 +71,30 @@ class Text2Led:
         # Return the part of the matrix starting from the column start_col and with maximum columns defined by self.columns. 
         # If there is space remaining, repeat the start of the matrix
 
-        cut_matrix = []
-          
-        for row_index in range(len(input_matrix)):                 
+        cut_matrix = []            
             
-            # Initially cut row starting from the current start_col which changes with movement
-            if start_col < len(input_matrix[0]):
-                row = input_matrix[row_index][:start_col+1]
-            else:
-                row = input_matrix[row_index] + [0 for ind in range(start_col - len(input_matrix[0]))]
+        # Initially cut row starting from the current start_col which changes with movement
+        if start_col < len(input_matrix[0]):
+            right_limit = start_col + 1
+            right_zeros = [0 for ind in range(start_col - len(input_matrix[0]))]
 
-            if len(row) > self.columns:
-                # If size exceeds available space, cut input row
-                row = row[len(row) - self.columns:]
-            else:
-                # Fill with zeros to the left to complete matrix size                
-                row = [0 for ind in range(self.columns - len(row))] + row
-                
+        else:
+            right_limit = len(input_matrix[0]) + 1
+            right_zeros = []
+
+        if start_col > self.columns:
+            # If size exceeds available space, cut input row
+            left_limit = start_col - self.columns
+            left_zeros = []
+            
+
+        else:
+            # Fill with zeros to the left to complete matrix size 
+            left_limit = 0
+            left_zeros = [0 for ind in range(self.columns - start_col)]               
+
+        for row_index in range(len(input_matrix)):
+            row = left_zeros + input_matrix[row_index][left_limit:right_limit] + right_zeros             
             cut_matrix.append(row)
         return cut_matrix
 
