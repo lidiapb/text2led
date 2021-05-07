@@ -4,12 +4,10 @@ class Text2Led:
     with open(os.path.join(os.path.abspath(os.getcwd()),'src','characters_matrix.json')) as json_file:
         char2Matrix_dict = json.load(json_file)   
 
-    # Number of led columns to separate one character from the other
-    chars_separation = 2 
-
-    def __init__(self, rows, columns):
+    def __init__(self, rows, columns, chars_separation):
         self.rows = rows
         self.columns = columns
+        self.chars_separation = chars_separation
     
     def parse_text(self, text):
         # This methid takes a string and converts it to a char list all in uppercase

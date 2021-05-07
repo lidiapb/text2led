@@ -15,6 +15,7 @@ else:
 rows = 8
 columns = 18
 period = 0.5 # Time between movements of the characters
+chars_separation = 5 # Number of led columns to separate one character from the other
 
 class Manager():
 	last_iteration_time = 0
@@ -68,7 +69,7 @@ class Manager():
 		self.led_test.start()	
 
 	def main(self):
-		self.t2l = Text2Led(rows, columns)
+		self.t2l = Text2Led(rows, columns, chars_separation)
 
 		if WINDOWS:
 				self.run_gui(self.print_text)
