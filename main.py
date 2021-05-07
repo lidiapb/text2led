@@ -14,48 +14,49 @@ else:
 
 rows = 8
 columns = 18
-period = 0.05 # Time between movements of the characters
+period = 0.5 # Time between movements of the characters
 
 class Manager():
 	last_iteration_time = 0
 
-	def print_text(self, text):
+	def print_text(self, text):		
 		print_thread = threading.Thread(target=self.print_text_threaded, args=(text,))
 		print_thread.start()
 
 	def print_text_threaded(self, text):
 		# Print the input text in the leds and optionally in the test GUI if working on WINDOWS
 		characters = self.t2l.parse_text(text) 
-		#print (characters)
-
 		led_matrix = self.t2l.charlist_to_matrix(characters)		
 
-		# Create led_matrix with zeros to the left and right for the full animation
-		extended_led_matrix = []	
-		zeros = [0 for col in range(columns)]
-		for row in range(len(led_matrix)):
-			extended_led_matrix.append(zeros + led_matrix[row] + zeros)
+		if(led_matrix != []):
+			# Create led_matrix with zeros to the left and right for the full animation
+			extended_led_matrix = []	
+			zeros = [0 for col in range(columns)]
+			for row in range(len(led_matrix)):
+				extended_led_matrix.append(zeros + led_matrix[row] + zeros)
 
-		index = 0
+			index = 0
 
-		while(True):
-			time_now = time.time()
-			if time_now - self.last_iteration_time < period:
-				continue
-			else:
-				self.last_iteration_time = time_now
-			
-			cut_matrix = self.t2l.get_cut_matrix(extended_led_matrix, index)
-			led_array = self.t2l.matrix_conversion(cut_matrix)
+			while(True):
+				time_now = time.time()
+				if time_now - self.last_iteration_time < period:
+					continue
+				else:
+					self.last_iteration_time = time_now
+				
+				cut_matrix = self.t2l.get_cut_matrix(extended_led_matrix, index)
+				led_array = self.t2l.matrix_conversion(cut_matrix)
 
-			if WINDOWS:
-				self.led_test.draw_array(led_array)				
-			else:	
-				self.led_manager.draw_array(led_array)
+				if WINDOWS:
+					self.led_test.draw_array(led_array)				
+				else:	
+					self.led_manager.draw_array(led_array)
 
-			index+=1
-			if index >= len(led_matrix[0]) + columns:
-				index = 0
+				index+=1
+				if index >= len(led_matrix[0]) + columns:
+					index = 0
+		else:
+			print("No characters were converted")
 							
 
 	def run_gui(self, button_callback):
