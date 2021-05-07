@@ -23,7 +23,7 @@ class Text2Led:
         zeros = [0 for sep in range(self.chars_separation)]
         for character in characters:            
             char_matrix = self.character_to_matrix(character)
-            
+
             if char_matrix != []:
                 if matrix == []:
                     matrix = [[] for idx in range(len(char_matrix))]
@@ -56,7 +56,7 @@ class Text2Led:
         # 
         # would be converted to: 
         #
-        # [A1, A3, B1, C1]
+        # [A1, B1, C1, C3]
         # 
         # meaning that only leds at those positions should be turned on.
 
