@@ -3,8 +3,7 @@ from src.text2Led import Text2Led
 import time
 import sys
 
-# TODO: Get OS automatically
-WINDOWS = True
+WINDOWS = sys.platform.startswith('win')
 
 if WINDOWS:
 	from src.gui import Gui
@@ -15,7 +14,7 @@ else:
 
 rows = 8
 columns = 18
-period = 0.1 # Time between movements of the characters
+period = 0.05 # Time between movements of the characters
 
 class Manager():
 	last_iteration_time = 0
@@ -29,7 +28,13 @@ class Manager():
 		characters = self.t2l.parse_text(text) 
 		#print (characters)
 
-		led_matrix = self.t2l.charlist_to_matrix(characters)			
+		led_matrix = self.t2l.charlist_to_matrix(characters)		
+
+		# Create led_matrix with zeros to the left and right for the full animation
+		extended_led_matrix = []	
+		zeros = [0 for col in range(columns)]
+		for row in range(len(led_matrix)):
+			extended_led_matrix.append(zeros + led_matrix[row] + zeros)
 
 		index = 0
 
@@ -40,8 +45,9 @@ class Manager():
 			else:
 				self.last_iteration_time = time_now
 			
-			cut_matrix = self.t2l.get_cut_matrix(led_matrix, index)
+			cut_matrix = self.t2l.get_cut_matrix(extended_led_matrix, index)
 			led_array = self.t2l.matrix_conversion(cut_matrix)
+
 			if WINDOWS:
 				self.led_test.draw_array(led_array)				
 			else:	

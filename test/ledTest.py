@@ -25,10 +25,10 @@ class LedTest(threading.Thread):
 	def draw_array(self, led_array):
 		self.clear()
 		for led in led_array:
-			row = ord(led[0])-65
-			col = int(led[1:])-1
+			row = self.columns - (ord(led[0])-65)
+			col = self.rows - int(led[1:])
 			# Avoid overflow
-			if(row < self.rows and col < self.columns):
+			if(row >= 0 and row < self.rows and col >= 0 and col < self.columns):
 				self.switch_led(row, col, True)
 
 	def run(self):
