@@ -67,7 +67,7 @@ class Text2Led:
                 column = row[column_index]
 
                 if column == 1:
-                    coordinates = chr(self.columns-row_index+65)+ str(self.rows - column_index)
+                    coordinates = chr(self.columns-column_index+65)+ str(self.rows - row_index + 1)
                     result.append(coordinates)
 
         return result

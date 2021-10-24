@@ -2,6 +2,7 @@
 from src.text2Led import Text2Led
 import time
 import sys
+import threading
 
 WINDOWS = sys.platform.startswith('win')
 
@@ -12,8 +13,8 @@ if WINDOWS:
 else:
 	from src.led_manager import LedManager 	
 
-rows = 8
-columns = 18
+rows = 18
+columns = 11
 period = 0.5 # Time between movements of the characters
 chars_separation = 5 # Number of led columns to separate one character from the other
 
@@ -27,7 +28,7 @@ class Manager():
 	def print_text_threaded(self, text):
 		# Print the input text in the leds and optionally in the test GUI if working on WINDOWS
 		characters = self.t2l.parse_text(text) 
-		led_matrix = self.t2l.charlist_to_matrix(characters)		
+		led_matrix = self.t2l.charlist_to_matrix(characters)
 
 		if(led_matrix != []):
 			# Create led_matrix with zeros to the left and right for the full animation
@@ -75,7 +76,7 @@ class Manager():
 				self.run_gui(self.print_text)
 				self.run_test()
 		else:
-			self.led_manager = LedManager(rows=rows, columns=columns)
+			self.led_manager = LedManager(rows=rows, cols=columns)
 			text = input("Introduce the text: ")
 			self.print_text(text)
 
