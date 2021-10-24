@@ -15,8 +15,8 @@ else:
 
 rows = 18
 columns = 11
-period = 0.5 # Time between movements of the characters
-chars_separation = 5 # Number of led columns to separate one character from the other
+period = 0.3 # Time between movements of the characters
+chars_separation = 1 # Number of led columns to separate one character from the other
 
 class Manager():
 	last_iteration_time = 0
@@ -36,7 +36,7 @@ class Manager():
 			zeros = [0 for col in range(columns)]
 			for row in range(len(led_matrix)):
 				extended_led_matrix.append(zeros + led_matrix[row] + zeros)
-				
+
 			index = 0
 			while(True):
 				time_now = time.time()

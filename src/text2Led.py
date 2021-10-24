@@ -37,6 +37,8 @@ class Text2Led:
 
 
     def character_to_matrix(self, character):
+        if character == ' ':
+            return [[0 for col in range(self.chars_separation)] for row in range(self.rows)]
         if character in self.char2Matrix_dict.keys():
             return self.char2Matrix_dict[character]
         else:
