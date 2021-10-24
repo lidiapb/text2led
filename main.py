@@ -36,9 +36,8 @@ class Manager():
 			zeros = [0 for col in range(columns)]
 			for row in range(len(led_matrix)):
 				extended_led_matrix.append(zeros + led_matrix[row] + zeros)
-
+				
 			index = 0
-
 			while(True):
 				time_now = time.time()
 				if time_now - self.last_iteration_time < period:
@@ -55,7 +54,7 @@ class Manager():
 					self.led_manager.draw_array(led_array)
 
 				index+=1
-				if index >= len(led_matrix[0]) + columns:
+				if index == len(extended_led_matrix[0]) - columns:
 					index = 0
 		else:
 			print("No characters were converted")

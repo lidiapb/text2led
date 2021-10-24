@@ -67,7 +67,7 @@ class Text2Led:
                 column = row[column_index]
 
                 if column == 1:
-                    coordinates = chr(self.columns-column_index+65)+ str(self.rows - row_index + 1)
+                    coordinates = chr(column_index+65)+ str(self.rows - row_index + 1)
                     result.append(coordinates)
 
         return result
@@ -76,11 +76,12 @@ class Text2Led:
         # Return the part of the matrix starting from the column start_col and with maximum columns defined by self.columns. 
         # If there is space remaining, repeat the start of the matrix
 
-        cut_matrix = []                  
+        cut_matrix = []               
 
         for row_index in range(len(input_matrix)):
             row =  input_matrix[row_index][start_col:start_col+self.columns]             
             cut_matrix.append(row)
+
         return cut_matrix
 
 
